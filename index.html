@@ -40,11 +40,11 @@ main{padding:20px}
 <header>
 <h1>🔢 Counting 1 to 999999</h1>
 <div class="search">
-<input id="q" type="number" min="1" max="999999" placeholder="Enter a number, e.g. 500000">
+<input id="q" type="text" inputmode="numeric" pattern="[0-9]*" placeholder="Enter a number, e.g. 500000">
 <button id="search">🔍 Search</button>
 <button id="clear">Clear</button>
 </div>
-<div id="status">Search any number from 1 to 999,999.</div>
+status.textContent="Search any positive whole number.";
 </header>
 <main id="result"></main>
 </div>
@@ -62,6 +62,34 @@ pw.addEventListener("keydown",e=>{if(e.key==="Enter")unlock();});
 
 const q=document.getElementById("q"), result=document.getElementById("result"), status=document.getElementById("status");
 function searchNumber(){
+  const value = q.value.trim();
+
+  if(!/^\d+$/.test(value) || value === "0"){
+    result.innerHTML="";
+  9999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999
+    return;
+  }
+
+  const n = BigInt(value);
+  const start = n > 10n ? n - 10n : 1n;
+  const end = n + 10n;
+
+  let nearby = "";
+
+  for(let i = start; i <= end; i++){
+    nearby += `<span class="n ${i === n ? 'hit' : ''}">${i.toString()}</span>`;
+  }
+
+  result.innerHTML =
+    `<div class="card">
+      <div>🔎 Number found:</div>
+      <div class="big">${n.toString()}</div>
+      <div>Numbers around it:</div>
+      <div class="near">${nearby}</div>
+    </div>`;
+
+  status.textContent="✅ Number found.";
+}
  const value=q.value.trim(), n=Number(value);
  if(value==="" || !Number.isInteger(n) || n<1 || n>999999){
   result.innerHTML="";status.textContent="❌ Please enter a whole number from 1 to 999,999.";return;
